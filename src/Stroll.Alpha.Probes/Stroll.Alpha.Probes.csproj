@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Stroll.Alpha.Probes</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Stroll.Alpha.Dataset\Stroll.Alpha.Dataset.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Stroll.Alpha.Dataset</AssemblyName>
+    <Authors>revred</Authors>
+    <Description>Frugal 0–45 DTE dataset with split schema and provider-agnostic sources</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
+  </ItemGroup>
+</Project>
