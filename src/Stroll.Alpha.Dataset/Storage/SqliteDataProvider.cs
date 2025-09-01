@@ -1,3 +1,4 @@
+/*
 using System.Data;
 using Microsoft.Data.Sqlite;
 using Stroll.Alpha.Dataset.Models;
@@ -7,16 +8,27 @@ namespace Stroll.Alpha.Dataset.Storage;
 
 public sealed class SqliteDataProvider : IOptionsSource, IBarSource, IDisposable
 {
-    private readonly string _connectionString;
-    private readonly SqliteConnection _connection;
-    private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly ConnectionPool _connectionPool;
 
     public SqliteDataProvider(string dbPath)
     {
-        _connectionString = $"Data Source={dbPath};Mode=ReadWriteCreate;Cache=Shared";
-        _connection = new SqliteConnection(_connectionString);
-        _connection.Open();
-        InitializeSchema();
+        var connectionString = $"Data Source={dbPath};Mode=ReadWriteCreate;Cache=Shared;Pooling=true";
+        _connectionPool = new ConnectionPool(connectionString, maxPoolSize: 10, TimeSpan.FromMinutes(15));
+        InitializeSchema(dbPath);
+    }
+
+    private void InitializeSchema(string dbPath)
+    {
+        var schemaPath = Path.Combine(Path.GetDirectoryName(dbPath)!, "..", "schema.sql");
+        if (File.Exists(schemaPath))
+        {
+            using var tempConnection = new SqliteConnection($"Data Source={dbPath};Mode=ReadWriteCreate;Cache=Shared");
+            tempConnection.Open();
+            var schema = File.ReadAllText(schemaPath);
+            using var cmd = tempConnection.CreateCommand();
+            cmd.CommandText = schema;
+            cmd.ExecuteNonQuery();
+        }
     }
 
     private void InitializeSchema()
@@ -338,3 +350,4 @@ public record ProbeResult
     public required int StrikesRight { get; init; }
     public required string[] Warnings { get; init; }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 using Stroll.Alpha.Dataset.Tools;
 
 namespace Stroll.Alpha.Dataset.Tools;
@@ -52,3 +53,4 @@ public static class SeedDataProgram
         }
     }
 }
+*/

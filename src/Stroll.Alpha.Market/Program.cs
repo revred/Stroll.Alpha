@@ -2,6 +2,7 @@ using System.Text.Json;
 using Stroll.Alpha.Dataset.Config;
 using Stroll.Alpha.Market.Contracts;
 using Stroll.Alpha.Market.Services;
+using Stroll.Alpha.Market.MCP;
 
 namespace Stroll.Alpha.Market;
 
@@ -118,57 +119,8 @@ public static class Program
 
     static async Task<int> HandleMcpCommand(MarketQueryService svc)
     {
-        Console.WriteLine("Starting MCP server for backtesting data...");
-        using var reader = Console.In;
-        
-        while (true)
-        {
-            var line = await reader.ReadLineAsync();
-            if (line is null) break;
-            
-            try
-            {
-                var doc = JsonDocument.Parse(line);
-                var method = doc.RootElement.GetProperty("method").GetString();
-                
-                switch (method)
-                {
-                    case "get_health":
-                        var health = new 
-                        { 
-                            status = "ok", 
-                            version = "alpha", 
-                            data_range = "2018-01-01 to 2025-08-29", 
-                            dte_range = "0-45", 
-                            now = DateTime.UtcNow 
-                        };
-                        Console.WriteLine(JsonSerializer.Serialize(health));
-                        break;
-                        
-                    case "get_chain":
-                        var p = doc.RootElement.GetProperty("params");
-                        var res = await svc.GetChainAsync(new ChainRequest(
-                            p.GetProperty("symbol").GetString()!,
-                            p.GetProperty("at").GetDateTime(),
-                            p.TryGetProperty("dte_min", out var dmin) ? dmin.GetInt32() : 0,
-                            p.TryGetProperty("dte_max", out var dmax) ? dmax.GetInt32() : 45,
-                            p.TryGetProperty("moneyness", out var mny) ? mny.GetDecimal() : 0.15m,
-                            true
-                        ), CancellationToken.None);
-                        Console.WriteLine(JsonSerializer.Serialize(res));
-                        break;
-
-                    default:
-                        Console.WriteLine(JsonSerializer.Serialize(new { error = $"Unknown method: {method}" }));
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonSerializer.Serialize(new { error = ex.Message }));
-            }
-        }
-        
+        using var mcpServer = new McpServer(svc);
+        await mcpServer.RunAsync(CancellationToken.None);
         return 0;
     }
 

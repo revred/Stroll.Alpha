@@ -14,6 +14,7 @@ public interface IBarSource
     IAsyncEnumerable<UnderlyingBar> GetBarsAsync(string symbol, DateTime fromUtc, DateTime toUtc, string interval, CancellationToken ct);
 }
 
+/*
 /// <summary>
 /// Production implementation connected to Stroll.Theta.DB SQLite database.
 /// </summary>
@@ -119,3 +120,4 @@ public sealed class ThetaDbSource : IOptionsSource, IBarSource, IDisposable
         _provider?.Dispose();
     }
 }
+*/
