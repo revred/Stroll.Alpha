@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Stroll.Alpha.Dataset.Generation;
+using Stroll.Alpha.Dataset.Programs;
 
 namespace Stroll.Alpha.Dataset;
 
@@ -21,6 +22,7 @@ public static class Program
                 "init-schema" => await HandleInitSchema(args),
                 "generate-historical" => await HandleGenerateHistorical(args),
                 "generate-multi-symbol" => await HandleGenerateMultiSymbol(args),
+                "generate-minute-bars" => await MinuteBarProgram.RunAsync(args[1..]),
                 _ => HandleUnknownCommand(command)
             };
         }
@@ -185,6 +187,7 @@ public static class Program
         Console.WriteLine("  init-schema [db_path]                    Initialize database schema");
         Console.WriteLine("  generate-historical [options]           Generate historical data (SPX)");
         Console.WriteLine("  generate-multi-symbol [options]         Generate multi-symbol historical data");
+        Console.WriteLine("  generate-minute-bars [options]          Generate 1-minute bars to Parquet files");
         Console.WriteLine();
         Console.WriteLine("Generate Historical Options:");
         Console.WriteLine("  --db-path PATH        Database file path");
