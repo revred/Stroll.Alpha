@@ -1,0 +1,33 @@
+# Build Artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+
+# .NET specific
+*.deps.json
+*.runtimeconfig.json
+*.sourcelink.json
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vs/
+.vscode/
+*.user
+*.suo
+*.userprefs
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
