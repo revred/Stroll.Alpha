@@ -23,6 +23,7 @@ public static class Program
                 "generate-historical" => await HandleGenerateHistorical(args),
                 "generate-multi-symbol" => await HandleGenerateMultiSymbol(args),
                 "generate-minute-bars" => await MinuteBarProgram.RunAsync(args[1..]),
+                "migrate-sixty" => await HandleMigrateSixty(args),
                 _ => HandleUnknownCommand(command)
             };
         }
@@ -172,6 +173,19 @@ public static class Program
         return 0;
     }
 
+    static async Task<int> HandleMigrateSixty(string[] args)
+    {
+        var sixtyDir = args.Length > 1 ? args[1] : @"C:\code\Stroll.Theta.Sixty";
+        var batchSize = args.Length > 2 ? int.Parse(args[2]) : 5;
+
+        Console.WriteLine($"Migrating Parquet to SQLite hourly databases:");
+        Console.WriteLine($"  Directory: {sixtyDir}");
+        Console.WriteLine($"  Batch size: {batchSize} files");
+
+        await SixtyMigrationProgram.RunAsync(new[] { sixtyDir, batchSize.ToString() });
+        return 0;
+    }
+
     static int HandleUnknownCommand(string command)
     {
         Console.WriteLine($"Unknown command: {command}");
@@ -188,6 +202,7 @@ public static class Program
         Console.WriteLine("  generate-historical [options]           Generate historical data (SPX)");
         Console.WriteLine("  generate-multi-symbol [options]         Generate multi-symbol historical data");
         Console.WriteLine("  generate-minute-bars [options]          Generate 1-minute bars to Parquet files");
+        Console.WriteLine("  migrate-sixty [dir] [batch_size]        Migrate Parquet to SQLite hourly databases");
         Console.WriteLine();
         Console.WriteLine("Generate Historical Options:");
         Console.WriteLine("  --db-path PATH        Database file path");
